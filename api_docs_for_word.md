@@ -932,3 +932,14 @@ Xảy ra khi dữ liệu gửi lên bị thiếu các trường bắt buộc, sa
   }
 }
 ```
+
+### 4. Lỗi dữ liệu không tồn tại (404 Not Found)
+Xảy ra khi ID truyền lên trên đường dẫn URL (ví dụ: `/companies/{id}`, `/users/{id}`) không tồn tại trong cơ sở dữ liệu.
+*   **HTTP Status Code:** `404 Not Found`
+*   **Định dạng JSON lỗi:**
+```json
+{
+  "status": "error",
+  "message": "Không tìm thấy chi nhánh"
+}
+```
