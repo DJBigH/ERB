@@ -165,6 +165,12 @@
 | 3 | `search` | String | Từ khóa tìm kiếm theo tên, mã công ty, mã số thuế | `ERB` |
 | 4 | `status` | Integer | Trạng thái hoạt động (`1`: Kích hoạt, `0`: Tạm khóa) | `1` |
 
+*   **Hướng dẫn test lọc dữ liệu (Query Filter Examples):**
+    *   **Tìm kiếm theo từ khóa:** `GET /companies?search=Tổng` (Tìm các công ty chứa chữ "Tổng")
+    *   **Lọc công ty đang kích hoạt:** `GET /companies?status=1`
+    *   **Lọc công ty tạm ngưng:** `GET /companies?status=0`
+    *   **Kết hợp tìm kiếm và phân trang:** `GET /companies?search=ERB&status=1&limit=5&page=1`
+
 *   **Dữ liệu phản hồi mẫu (JSON Response - Thành công 200 OK):**
 ```json
 {
@@ -343,6 +349,22 @@
 #### 3.1. Lấy danh sách chi nhánh (Index)
 *   **Đường dẫn (URL):** `/branches`
 *   **Phương thức (Method):** `GET`
+*   **Tham số trên đường dẫn (Query Parameters - Tùy chọn):**
+
+| STT | Tên tham số | Kiểu dữ liệu | Mô tả | Ví dụ |
+| :--- | :--- | :---: | :--- | :--- |
+| 1 | `page` | Integer | Số thứ tự trang cần lấy dữ liệu | `1` |
+| 2 | `limit` | Integer | Số lượng bản ghi trên một trang | `15` |
+| 3 | `search` | String | Từ khóa tìm kiếm theo tên, mã chi nhánh, MST chi nhánh | `Hà Nội` |
+| 4 | `company_id` | Integer | Lọc các chi nhánh thuộc một Công ty nhất định | `1` |
+| 5 | `status` | Integer | Trạng thái hoạt động (`1`: Kích hoạt, `0`: Tạm ngưng) | `1` |
+
+*   **Hướng dẫn test lọc dữ liệu (Query Filter Examples):**
+    *   **Tìm kiếm theo từ khóa:** `GET /branches?search=Hải%20Phòng` (Tìm các chi nhánh có tên/mã/MST chứa "Hải Phòng")
+    *   **Lọc chi nhánh theo Công ty:** `GET /branches?company_id=1` (Lọc toàn bộ chi nhánh của công ty có ID là 1)
+    *   **Lọc chi nhánh hoạt động:** `GET /branches?status=1`
+    *   **Kết hợp lọc, tìm kiếm và phân trang:** `GET /branches?company_id=1&status=1&search=HN&limit=10&page=1`
+
 *   **Dữ liệu phản hồi mẫu (JSON Response - Thành công 200 OK):**
 ```json
 {
@@ -443,6 +465,22 @@
 #### 4.1. Lấy danh sách phòng ban (Index)
 *   **Đường dẫn (URL):** `/departments`
 *   **Phương thức (Method):** `GET`
+*   **Tham số trên đường dẫn (Query Parameters - Tùy chọn):**
+
+| STT | Tên tham số | Kiểu dữ liệu | Mô tả | Ví dụ |
+| :--- | :--- | :---: | :--- | :--- |
+| 1 | `page` | Integer | Số thứ tự trang cần lấy dữ liệu | `1` |
+| 2 | `limit` | Integer | Số lượng bản ghi trên một trang | `15` |
+| 3 | `search` | String | Từ khóa tìm kiếm theo tên hoặc mã phòng ban | `BGD` |
+| 4 | `branch_id` | Integer | Lọc các phòng ban thuộc một Chi nhánh nhất định | `1` |
+| 5 | `status` | Integer | Trạng thái hoạt động (`1`: Kích hoạt, `0`: Tạm ngưng) | `1` |
+
+*   **Hướng dẫn test lọc dữ liệu (Query Filter Examples):**
+    *   **Tìm kiếm theo từ khóa:** `GET /departments?search=Công%20Nghệ` (Tìm phòng ban tên/mã chứa "Công Nghệ")
+    *   **Lọc phòng ban theo Chi nhánh:** `GET /departments?branch_id=1` (Lọc các phòng ban của chi nhánh ID là 1)
+    *   **Lọc phòng ban hoạt động:** `GET /departments?status=1`
+    *   **Kết hợp lọc, tìm kiếm và phân trang:** `GET /departments?branch_id=1&status=1&search=AI&limit=5&page=1`
+
 *   **Dữ liệu phản hồi mẫu (JSON Response - Thành công 200 OK):**
 ```json
 {
@@ -522,6 +560,18 @@
 #### 5.1. Lấy danh sách chức vụ (Index)
 *   **Đường dẫn (URL):** `/positions`
 *   **Phương thức (Method):** `GET`
+*   **Tham số trên đường dẫn (Query Parameters - Tùy chọn):**
+
+| STT | Tên tham số | Kiểu dữ liệu | Mô tả | Ví dụ |
+| :--- | :--- | :---: | :--- | :--- |
+| 1 | `page` | Integer | Số thứ tự trang cần lấy dữ liệu | `1` |
+| 2 | `limit` | Integer | Số lượng bản ghi trên một trang | `15` |
+| 3 | `search` | String | Từ khóa tìm kiếm theo tên chức vụ | `Trưởng` |
+
+*   **Hướng dẫn test lọc dữ liệu (Query Filter Examples):**
+    *   **Tìm kiếm chức vụ:** `GET /positions?search=Chuyên%20Viên` (Tìm các chức vụ chứa chữ "Chuyên Viên")
+    *   **Tìm kiếm kết hợp phân trang:** `GET /positions?search=Trưởng&limit=10&page=1`
+
 *   **Dữ liệu phản hồi mẫu (JSON Response - Thành công 200 OK):**
 ```json
 {
@@ -585,6 +635,24 @@
 #### 6.1. Lấy danh sách nhân viên (Index)
 *   **Đường dẫn (URL):** `/users`
 *   **Phương thức (Method):** `GET`
+*   **Tham số trên đường dẫn (Query Parameters - Tùy chọn):**
+
+| STT | Tên tham số | Kiểu dữ liệu | Mô tả | Ví dụ |
+| :--- | :--- | :---: | :--- | :--- |
+| 1 | `page` | Integer | Số thứ tự trang cần lấy dữ liệu | `1` |
+| 2 | `limit` | Integer | Số lượng bản ghi trên một trang | `15` |
+| 3 | `search` | String | Từ khóa tìm kiếm theo tên, mã, email nhân sự | `NV005` |
+| 4 | `company_id` | Integer | Lọc nhân sự thuộc một Công ty nhất định | `1` |
+| 5 | `branch_id` | Integer | Lọc nhân sự thuộc một Chi nhánh nhất định | `1` |
+| 6 | `department_id` | Integer | Lọc nhân sự thuộc một Phòng ban nhất định | `1` |
+| 7 | `status` | Integer | Trạng thái (`1`: Đang làm việc, `0`: Đã nghỉ việc) | `1` |
+
+*   **Hướng dẫn test lọc dữ liệu (Query Filter Examples):**
+    *   **Tìm kiếm theo từ khóa:** `GET /users?search=Trần%20Thị` (Tìm nhân sự tên/mã/email chứa "Trần Thị")
+    *   **Lọc nhân sự theo Chi nhánh và Phòng ban:** `GET /users?branch_id=1&department_id=2`
+    *   **Lọc nhân sự hoạt động:** `GET /users?status=1`
+    *   **Kết hợp lọc nhiều trường và phân trang:** `GET /users?company_id=1&branch_id=1&department_id=1&status=1&search=Admin&limit=15&page=1`
+
 *   **Dữ liệu phản hồi mẫu (JSON Response - Thành công 200 OK):**
 ```json
 {
