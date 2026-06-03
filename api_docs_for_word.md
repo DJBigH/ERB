@@ -749,12 +749,109 @@
 ---
 
 ### 7. MODULE VAI TRÒ & QUYỀN HẠN (ROLES & PERMISSIONS)
-*(Yêu cầu Header Token hợp lệ & Tài khoản sở hữu quyền: `quan_ly_he_thong`)*
+*(Yêu cầu Header Token hợp lệ & Tài khoản sở hữu quyền: `quan_ly_he_thong` hoặc `quan_ly_nhan_su` tùy API)*
 
-#### 7.1. Lấy danh sách toàn bộ quyền hệ thống có sẵn (Get Permissions)
+#### 7.1. Lấy danh sách Vai trò (Index Roles)
+*   **Đường dẫn (URL):** `/roles`
+*   **Phương thức (Method):** `GET`
+*   **Mô tả:** Lấy danh sách toàn bộ các vai trò trên hệ thống (không yêu cầu quyền quản trị hệ thống để điền vào dropdown tạo nhân viên).
+*   **Dữ liệu phản hồi mẫu (JSON Response - Thành công 200 OK):**
+```json
+{
+  "status": "success",
+  "data": [
+    {
+      "id": 1,
+      "name": "Super Admin",
+      "permissions": [
+        { "id": 1, "name": "quan_ly_he_thong" },
+        { "id": 2, "name": "quan_ly_nhan_su" }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Quản Lý Nhân Sự",
+      "permissions": [
+        { "id": 2, "name": "quan_ly_nhan_su" }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+#### 7.2. Tạo mới Vai trò (Store Role)
+*   **Đường dẫn (URL):** `/roles`
+*   **Phương thức (Method):** `POST`
+*   **Mô tả:** Thêm mới một vai trò (Yêu cầu quyền: `quan_ly_he_thong`).
+*   **Danh sách tham số đầu vào (Request Body):**
+
+| STT | Tên tham số | Kiểu dữ liệu | Bắt buộc | Mô tả | Ví dụ |
+| :--- | :--- | :---: | :---: | :--- | :--- |
+| 1 | `name` | String | Có | Tên vai trò duy nhất | `Trưởng Phòng HR` |
+
+*   **Dữ liệu mẫu gửi đi (JSON Request):**
+```json
+{
+  "name": "Trưởng Phòng HR"
+}
+```
+*   **Dữ liệu phản hồi mẫu (JSON Response - Thành công 201 Created):**
+```json
+{
+  "status": "success",
+  "message": "Tạo vai trò thành công",
+  "data": {
+    "id": 3,
+    "name": "Trưởng Phòng HR",
+    "updated_at": "2026-06-03T13:00:00.000000Z",
+    "created_at": "2026-06-03T13:00:00.000000Z"
+  }
+}
+```
+
+---
+
+#### 7.3. Xem chi tiết Vai trò (Show Role)
+*   **Đường dẫn (URL):** `/roles/{id}` (Ví dụ: `/roles/1`)
+*   **Phương thức (Method):** `GET`
+*   **Mô tả:** Lấy thông tin chi tiết một vai trò và các quyền tương ứng đang có (Yêu cầu quyền: `quan_ly_he_thong`).
+*   **Dữ liệu phản hồi mẫu (JSON Response - Thành công 200 OK):**
+```json
+{
+  "status": "success",
+  "data": {
+    "id": 1,
+    "name": "Super Admin",
+    "permissions": [
+      { "id": 1, "name": "quan_ly_he_thong" },
+      { "id": 2, "name": "quan_ly_nhan_su" }
+    ]
+  }
+}
+```
+
+---
+
+#### 7.4. Xóa Vai trò (Delete Role)
+*   **Đường dẫn (URL):** `/roles/{id}` (Ví dụ: `/roles/3`)
+*   **Phương thức (Method):** `DELETE`
+*   **Mô tả:** Xóa vai trò khỏi hệ thống (Yêu cầu quyền: `quan_ly_he_thong`).
+*   **Dữ liệu phản hồi mẫu (JSON Response - Thành công 200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Xóa vai trò thành công"
+}
+```
+
+---
+
+#### 7.5. Lấy danh sách toàn bộ quyền hệ thống có sẵn (Get Permissions)
 *   **Đường dẫn (URL):** `/permissions`
 *   **Phương thức (Method):** `GET`
-*   **Mô tả:** Lấy danh sách tất cả các quyền hệ thống hỗ trợ (để check tick trên giao diện quản trị).
+*   **Mô tả:** Lấy danh sách tất cả các quyền hệ thống hỗ trợ (Yêu cầu quyền: `quan_ly_he_thong`).
 *   **Dữ liệu phản hồi mẫu (JSON Response - Thành công 200 OK):**
 ```json
 {
@@ -769,9 +866,10 @@
 
 ---
 
-#### 7.2. Gán (Đồng bộ) danh sách quyền cho một Vai trò (Assign Permissions)
+#### 7.6. Gán (Đồng bộ) danh sách quyền cho một Vai trò (Assign Permissions)
 *   **Đường dẫn (URL):** `/roles/{id}/permissions` (Ví dụ: `/roles/2/permissions`)
 *   **Phương thức (Method):** `POST`
+*   **Mô tả:** Cập nhật đồng bộ các quyền hệ thống cho vai trò (Yêu cầu quyền: `quan_ly_he_thong`).
 *   **Danh sách tham số đầu vào (Request Body):**
 
 | STT | Tên tham số | Kiểu dữ liệu | Bắt buộc | Mô tả | Ví dụ |
