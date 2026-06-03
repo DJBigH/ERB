@@ -1,0 +1,12 @@
+{
+    "name": "Company",
+    "alias": "company",
+    "description": "Module managing organization structure including companies, branches, departments, and positions.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Company\\Providers\\CompanyServiceProvider"
+    ],
+    "files": [],
+    "requires": []
+}
