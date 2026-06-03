@@ -11,7 +11,90 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/users",
+     *     tags={"Users"},
+     *     summary="Lấy danh sách nhân viên",
+     *     description="Lấy danh sách nhân viên hỗ trợ tìm kiếm theo tên/mã/email, lọc theo công ty, chi nhánh, phòng ban, trạng thái và phân trang.",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Số thứ tự trang cần lấy dữ liệu",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         description="Số lượng bản ghi trên một trang",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=15)
+     *     ),
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="Từ khóa tìm kiếm theo tên, mã hoặc email nhân sự",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="company_id",
+     *         in="query",
+     *         description="Lọc nhân sự trực thuộc một công ty cụ thể",
+     *         required=false,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="branch_id",
+     *         in="query",
+     *         description="Lọc nhân sự trực thuộc một chi nhánh cụ thể",
+     *         required=false,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="department_id",
+     *         in="query",
+     *         description="Lọc nhân sự trực thuộc một phòng ban cụ thể",
+     *         required=false,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="status",
+     *         in="query",
+     *         description="Trạng thái (1: Đang làm việc, 0: Đã nghỉ việc)",
+     *         required=false,
+     *         @OA\Schema(type="integer", enum={0, 1})
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lấy danh sách thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="current_page", type="integer", example=1),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                         @OA\Property(property="id", type="integer", example=1),
+     *                         @OA\Property(property="company_id", type="integer", example=1),
+     *                         @OA\Property(property="branch_id", type="integer", example=1),
+     *                         @OA\Property(property="department_id", type="integer", example=1),
+     *                         @OA\Property(property="position_id", type="integer", example=1),
+     *                         @OA\Property(property="role_id", type="integer", example=1),
+     *                         @OA\Property(property="code", type="string", example="ADMIN01"),
+     *                         @OA\Property(property="name", type="string", example="Super Admin"),
+     *                         @OA\Property(property="email", type="string", example="admin@erb.vn"),
+     *                         @OA\Property(property="phone", type="string", example="0987654321"),
+     *                         @OA\Property(property="status", type="integer", example=1)
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="total", type="integer", example=1)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Chưa xác thực tài khoản"),
+     *     @OA\Response(response=403, description="Không có quyền truy cập")
+     * )
      */
     public function index(Request $request)
     {

@@ -10,7 +10,54 @@ use Illuminate\Support\Facades\Validator;
 class PositionController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/positions",
+     *     tags={"Positions"},
+     *     summary="Lấy danh sách chức vụ",
+     *     description="Lấy danh sách chức vụ hỗ trợ tìm kiếm theo tên và phân trang.",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Số thứ tự trang cần lấy dữ liệu",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         description="Số lượng bản ghi trên một trang",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=15)
+     *     ),
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="Từ khóa tìm kiếm theo tên chức vụ",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lấy danh sách thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="current_page", type="integer", example=1),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                         @OA\Property(property="id", type="integer", example=1),
+     *                         @OA\Property(property="name", type="string", example="Giám Đốc"),
+     *                         @OA\Property(property="description", type="string", example="Quản lý điều hành toàn diện")
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="total", type="integer", example=2)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Chưa xác thực tài khoản"),
+     *     @OA\Response(response=403, description="Không có quyền truy cập")
+     * )
      */
     public function index(Request $request)
     {

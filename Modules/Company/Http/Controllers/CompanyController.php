@@ -10,7 +10,67 @@ use Illuminate\Support\Facades\Validator;
 class CompanyController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/companies",
+     *     tags={"Companies"},
+     *     summary="Lấy danh sách công ty",
+     *     description="Lấy danh sách công ty hỗ trợ tìm kiếm theo tên/mã/MST, lọc theo trạng thái và phân trang.",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Số thứ tự trang cần lấy dữ liệu",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         description="Số lượng bản ghi trên một trang",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=15)
+     *     ),
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="Từ khóa tìm kiếm theo tên, mã hoặc mã số thuế công ty",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="status",
+     *         in="query",
+     *         description="Trạng thái hoạt động (1: Kích hoạt, 0: Tạm khóa)",
+     *         required=false,
+     *         @OA\Schema(type="integer", enum={0, 1})
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lấy danh sách thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="current_page", type="integer", example=1),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                         @OA\Property(property="id", type="integer", example=1),
+     *                         @OA\Property(property="name", type="string", example="Tổng Công Ty ERB"),
+     *                         @OA\Property(property="code", type="string", example="ERB_CORP"),
+     *                         @OA\Property(property="tax_code", type="string", example="0101234567"),
+     *                         @OA\Property(property="phone", type="string", example="0243999999"),
+     *                         @OA\Property(property="email", type="string", example="info@erb.vn"),
+     *                         @OA\Property(property="address", type="string", example="Cầu Giấy, Hà Nội"),
+     *                         @OA\Property(property="status", type="integer", example=1),
+     *                         @OA\Property(property="parent_id", type="integer", nullable=true, example=null)
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="total", type="integer", example=2)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Chưa xác thực tài khoản"),
+     *     @OA\Response(response=403, description="Không có quyền truy cập")
+     * )
      */
     public function index(Request $request)
     {

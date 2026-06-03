@@ -9,7 +9,55 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
     /**
-     * Get a JWT via given credentials.
+     * @OA\Post(
+     *     path="/auth/login",
+     *     tags={"Auth"},
+     *     summary="Đăng nhập hệ thống",
+     *     description="Xác thực thông tin tài khoản nhân viên (email, password) và cấp JWT Access Token.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "password"},
+     *             @OA\Property(property="email", type="string", format="email", example="admin@erb.vn"),
+     *             @OA\Property(property="password", type="string", format="password", example="12345678")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Đăng nhập thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Đăng nhập thành công"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="access_token", type="string", example="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."),
+     *                 @OA\Property(property="token_type", type="string", example="bearer"),
+     *                 @OA\Property(property="expires_in", type="integer", example=3600),
+     *                 @OA\Property(property="user", type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="Super Admin"),
+     *                     @OA\Property(property="email", type="string", example="admin@erb.vn"),
+     *                     @OA\Property(property="code", type="string", example="ADMIN01")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Dữ liệu đầu vào không hợp lệ",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Email là bắt buộc.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Email hoặc mật khẩu không chính xác",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Email hoặc mật khẩu không chính xác")
+     *         )
+     *     )
+     * )
      */
     public function login(Request $request)
     {
@@ -44,7 +92,29 @@ class AuthController extends Controller
     }
 
     /**
-     * Log the user out (Invalidate the token).
+     * @OA\Post(
+     *     path="/auth/logout",
+     *     tags={"Auth"},
+     *     summary="Đăng xuất khỏi hệ thống",
+     *     description="Hủy và đưa JWT Access Token hiện tại vào danh sách đen.",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Đăng xuất thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Đăng xuất thành công")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Chưa xác thực tài khoản",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Chưa xác thực")
+     *         )
+     *     )
+     * )
      */
     public function logout()
     {
@@ -57,7 +127,61 @@ class AuthController extends Controller
     }
 
     /**
-     * Get the authenticated User.
+     * @OA\Get(
+     *     path="/auth/me",
+     *     tags={"Auth"},
+     *     summary="Lấy hồ sơ tài khoản hiện tại",
+     *     description="Lấy thông tin tài khoản hiện đang đăng nhập cùng với thông tin công ty, chi nhánh, phòng ban, chức vụ và danh sách quyền hạn.",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lấy thông tin thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="Super Admin"),
+     *                 @OA\Property(property="email", type="string", example="admin@erb.vn"),
+     *                 @OA\Property(property="code", type="string", example="ADMIN01"),
+     *                 @OA\Property(property="phone", type="string", example="0987654321"),
+     *                 @OA\Property(property="company", type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="Tổng Công Ty ERB")
+     *                 ),
+     *                 @OA\Property(property="branch", type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="Chi Nhánh Hà Nội")
+     *                 ),
+     *                 @OA\Property(property="department", type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="Ban Giám Đốc")
+     *                 ),
+     *                 @OA\Property(property="position", type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="Giám Đốc")
+     *                 ),
+     *                 @OA\Property(property="role", type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="Super Admin"),
+     *                     @OA\Property(property="permissions", type="array",
+     *                         @OA\Items(
+     *                             @OA\Property(property="id", type="integer", example=1),
+     *                             @OA\Property(property="name", type="string", example="quan_ly_he_thong")
+     *                         )
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Chưa xác thực tài khoản",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Chưa xác thực")
+     *         )
+     *     )
+     * )
      */
     public function me()
     {

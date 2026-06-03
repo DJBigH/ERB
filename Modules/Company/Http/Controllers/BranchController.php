@@ -10,7 +10,74 @@ use Illuminate\Support\Facades\Validator;
 class BranchController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/branches",
+     *     tags={"Branches"},
+     *     summary="Lấy danh sách chi nhánh",
+     *     description="Lấy danh sách chi nhánh hỗ trợ tìm kiếm, lọc theo công ty, trạng thái và phân trang.",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Số thứ tự trang cần lấy dữ liệu",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         description="Số lượng bản ghi trên một trang",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=15)
+     *     ),
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="Từ khóa tìm kiếm theo tên, mã hoặc mã số thuế chi nhánh",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="company_id",
+     *         in="query",
+     *         description="Lọc chi nhánh trực thuộc một công ty cụ thể",
+     *         required=false,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="status",
+     *         in="query",
+     *         description="Trạng thái hoạt động (1: Kích hoạt, 0: Tạm ngưng)",
+     *         required=false,
+     *         @OA\Schema(type="integer", enum={0, 1})
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lấy danh sách thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="current_page", type="integer", example=1),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                         @OA\Property(property="id", type="integer", example=1),
+     *                         @OA\Property(property="company_id", type="integer", example=1),
+     *                         @OA\Property(property="name", type="string", example="Chi Nhánh Hà Nội"),
+     *                         @OA\Property(property="code", type="string", example="CN_HN"),
+     *                         @OA\Property(property="tax_code", type="string", example="0101234567-001"),
+     *                         @OA\Property(property="phone", type="string", example="0243999111"),
+     *                         @OA\Property(property="email", type="string", example="hn@erb.vn"),
+     *                         @OA\Property(property="address", type="string", example="Cầu Giấy, Hà Nội"),
+     *                         @OA\Property(property="status", type="integer", example=1)
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="total", type="integer", example=1)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Chưa xác thực tài khoản"),
+     *     @OA\Response(response=403, description="Không có quyền truy cập")
+     * )
      */
     public function index(Request $request)
     {

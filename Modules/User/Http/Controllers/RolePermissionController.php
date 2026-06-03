@@ -11,7 +11,33 @@ use Illuminate\Support\Facades\Validator;
 class RolePermissionController extends Controller
 {
     /**
-     * Display a listing of the roles.
+     * @OA\Get(
+     *     path="/roles",
+     *     tags={"Roles & Permissions"},
+     *     summary="Lấy danh sách vai trò hệ thống",
+     *     description="Lấy danh sách toàn bộ các vai trò hệ thống kèm theo các quyền tương ứng của từng vai trò.",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lấy danh sách thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="Super Admin"),
+     *                     @OA\Property(property="permissions", type="array",
+     *                         @OA\Items(
+     *                             @OA\Property(property="id", type="integer", example=1),
+     *                             @OA\Property(property="name", type="string", example="quan_ly_he_thong")
+     *                         )
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Chưa xác thực tài khoản")
+     * )
      */
     public function index()
     {
@@ -96,7 +122,28 @@ class RolePermissionController extends Controller
     }
 
     /**
-     * Display a listing of all system permissions.
+     * @OA\Get(
+     *     path="/permissions",
+     *     tags={"Roles & Permissions"},
+     *     summary="Lấy danh sách tất cả quyền hạn có sẵn",
+     *     description="Lấy danh sách tất cả các quyền hệ thống hỗ trợ quản lý (Yêu cầu quyền: quan_ly_he_thong).",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lấy danh sách thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="quan_ly_he_thong")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Chưa xác thực tài khoản"),
+     *     @OA\Response(response=403, description="Không có quyền truy cập")
+     * )
      */
     public function permissions()
     {
@@ -109,7 +156,41 @@ class RolePermissionController extends Controller
     }
 
     /**
-     * Assign permissions to a specified role.
+     * @OA\Post(
+     *     path="/roles/{id}/permissions",
+     *     tags={"Roles & Permissions"},
+     *     summary="Gán/Đồng bộ danh sách quyền cho vai trò",
+     *     description="Gán hoặc đồng bộ mảng chứa các ID quyền cho một vai trò xác định bằng ID trên URL (Yêu cầu quyền: quan_ly_he_thong).",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID của Vai trò cần gán quyền",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"permissions_id"},
+     *             @OA\Property(property="permissions_id", type="array",
+     *                 @OA\Items(type="integer", example=2)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Gán quyền thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Gán quyền cho vai trò thành công")
+     *         )
+     *     ),
+     *     @OA\Response(response=400, description="Dữ liệu gửi lên không hợp lệ"),
+     *     @OA\Response(response=401, description="Chưa xác thực tài khoản"),
+     *     @OA\Response(response=403, description="Không có quyền truy cập"),
+     *     @OA\Response(response=404, description="Không tìm thấy vai trò")
+     * )
      */
     public function assignPermissions(Request $request, $id)
     {
