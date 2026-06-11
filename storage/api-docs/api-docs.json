@@ -1,0 +1,4676 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "ERB System API Documentation",
+        "description": "Tài liệu đặc tả và kiểm thử RESTful API - Hệ thống quản trị ERB",
+        "contact": {
+            "email": "admin@erb.vn"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api/v1",
+            "description": "Local Development Server"
+        }
+    ],
+    "paths": {
+        "/branches": {
+            "get": {
+                "tags": [
+                    "Branches"
+                ],
+                "summary": "Lấy danh sách chi nhánh",
+                "description": "Lấy danh sách chi nhánh hỗ trợ tìm kiếm, lọc theo công ty, trạng thái và phân trang.",
+                "operationId": "e24f1c441cacbb1d30bb270f7ea2dffc",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Số thứ tự trang cần lấy dữ liệu",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Số lượng bản ghi trên một trang",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Từ khóa tìm kiếm theo tên, mã hoặc mã số thuế chi nhánh",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "company_id",
+                        "in": "query",
+                        "description": "Lọc chi nhánh trực thuộc một công ty cụ thể",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Trạng thái hoạt động (1: Kích hoạt, 0: Tạm ngưng)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "company_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Chi Nhánh Hà Nội"
+                                                            },
+                                                            "code": {
+                                                                "type": "string",
+                                                                "example": "CN_HN"
+                                                            },
+                                                            "tax_code": {
+                                                                "type": "string",
+                                                                "example": "0101234567-001"
+                                                            },
+                                                            "phone": {
+                                                                "type": "string",
+                                                                "example": "0243999111"
+                                                            },
+                                                            "email": {
+                                                                "type": "string",
+                                                                "example": "hn@erb.vn"
+                                                            },
+                                                            "address": {
+                                                                "type": "string",
+                                                                "example": "Cầu Giấy, Hà Nội"
+                                                            },
+                                                            "status": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    },
+                    "403": {
+                        "description": "Không có quyền truy cập"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/companies": {
+            "get": {
+                "tags": [
+                    "Companies"
+                ],
+                "summary": "Lấy danh sách công ty",
+                "description": "Lấy danh sách công ty hỗ trợ tìm kiếm theo tên/mã/MST, lọc theo trạng thái và phân trang.",
+                "operationId": "d127be9d0b67f9a75e6a2664f3dbf41e",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Số thứ tự trang cần lấy dữ liệu",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Số lượng bản ghi trên một trang",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Từ khóa tìm kiếm theo tên, mã hoặc mã số thuế công ty",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Trạng thái hoạt động (1: Kích hoạt, 0: Tạm khóa)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Tổng Công Ty ERB"
+                                                            },
+                                                            "code": {
+                                                                "type": "string",
+                                                                "example": "ERB_CORP"
+                                                            },
+                                                            "tax_code": {
+                                                                "type": "string",
+                                                                "example": "0101234567"
+                                                            },
+                                                            "phone": {
+                                                                "type": "string",
+                                                                "example": "0243999999"
+                                                            },
+                                                            "email": {
+                                                                "type": "string",
+                                                                "example": "info@erb.vn"
+                                                            },
+                                                            "address": {
+                                                                "type": "string",
+                                                                "example": "Cầu Giấy, Hà Nội"
+                                                            },
+                                                            "status": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "parent_id": {
+                                                                "type": "integer",
+                                                                "example": null,
+                                                                "nullable": true
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    },
+                    "403": {
+                        "description": "Không có quyền truy cập"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/departments": {
+            "get": {
+                "tags": [
+                    "Departments"
+                ],
+                "summary": "Lấy danh sách phòng ban",
+                "description": "Lấy danh sách phòng ban hỗ trợ tìm kiếm theo tên/mã, lọc theo chi nhánh, trạng thái và phân trang.",
+                "operationId": "6409a1c315fa0ab04bac5f7a103352fa",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Số thứ tự trang cần lấy dữ liệu",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Số lượng bản ghi trên một trang",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Từ khóa tìm kiếm theo tên hoặc mã phòng ban",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "branch_id",
+                        "in": "query",
+                        "description": "Lọc phòng ban trực thuộc một chi nhánh cụ thể",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Trạng thái hoạt động (1: Kích hoạt, 0: Tạm ngưng)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "branch_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "parent_id": {
+                                                                "type": "integer",
+                                                                "example": null,
+                                                                "nullable": true
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Ban Giám Đốc"
+                                                            },
+                                                            "code": {
+                                                                "type": "string",
+                                                                "example": "BGD"
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "example": "Ban điều hành công ty"
+                                                            },
+                                                            "status": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    },
+                    "403": {
+                        "description": "Không có quyền truy cập"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/positions": {
+            "get": {
+                "tags": [
+                    "Positions"
+                ],
+                "summary": "Lấy danh sách chức vụ",
+                "description": "Lấy danh sách chức vụ hỗ trợ tìm kiếm theo tên và phân trang.",
+                "operationId": "79173cbd2b4bbf9acb13d446cb796118",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Số thứ tự trang cần lấy dữ liệu",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Số lượng bản ghi trên một trang",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Từ khóa tìm kiếm theo tên chức vụ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Giám Đốc"
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "example": "Quản lý điều hành toàn diện"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    },
+                    "403": {
+                        "description": "Không có quyền truy cập"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Đăng nhập hệ thống",
+                "description": "Xác thực thông tin tài khoản nhân viên (email, password) và cấp JWT Access Token.",
+                "operationId": "aeb27c07a9e11047e5c9d750e350a33d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "admin@erb.vn"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "12345678"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Đăng nhập thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Đăng nhập thành công"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "access_token": {
+                                                    "type": "string",
+                                                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "bearer"
+                                                },
+                                                "expires_in": {
+                                                    "type": "integer",
+                                                    "example": 3600
+                                                },
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Super Admin"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "admin@erb.vn"
+                                                        },
+                                                        "code": {
+                                                            "type": "string",
+                                                            "example": "ADMIN01"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dữ liệu đầu vào không hợp lệ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email là bắt buộc."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Email hoặc mật khẩu không chính xác",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email hoặc mật khẩu không chính xác"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Đăng xuất khỏi hệ thống",
+                "description": "Hủy và đưa JWT Access Token hiện tại vào danh sách đen.",
+                "operationId": "3a6c44c144cff8be6d48801d8be598c6",
+                "responses": {
+                    "200": {
+                        "description": "Đăng xuất thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Đăng xuất thành công"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Chưa xác thực"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/me": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Lấy hồ sơ tài khoản hiện tại",
+                "description": "Lấy thông tin tài khoản hiện đang đăng nhập cùng với thông tin công ty, chi nhánh, phòng ban, chức vụ và danh sách quyền hạn.",
+                "operationId": "d115ed1c482aaed22d7d5b252e956c4c",
+                "responses": {
+                    "200": {
+                        "description": "Lấy thông tin thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Super Admin"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "admin@erb.vn"
+                                                },
+                                                "code": {
+                                                    "type": "string",
+                                                    "example": "ADMIN01"
+                                                },
+                                                "phone": {
+                                                    "type": "string",
+                                                    "example": "0987654321"
+                                                },
+                                                "company": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Tổng Công Ty ERB"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "branch": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Chi Nhánh Hà Nội"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "department": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Ban Giám Đốc"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "position": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Giám Đốc"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "role": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Super Admin"
+                                                        },
+                                                        "permissions": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "type": "integer",
+                                                                        "example": 1
+                                                                    },
+                                                                    "name": {
+                                                                        "type": "string",
+                                                                        "example": "quan_ly_he_thong"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Chưa xác thực"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/roles": {
+            "get": {
+                "tags": [
+                    "Roles & Permissions"
+                ],
+                "summary": "Lấy danh sách vai trò hệ thống",
+                "description": "Lấy danh sách toàn bộ các vai trò hệ thống kèm theo các quyền tương ứng của từng vai trò.",
+                "operationId": "da84d50fa12e2bae8776c4aae1c5409f",
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Super Admin"
+                                                    },
+                                                    "permissions": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "quan_ly_he_thong"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/permissions": {
+            "get": {
+                "tags": [
+                    "Roles & Permissions"
+                ],
+                "summary": "Lấy danh sách tất cả quyền hạn có sẵn",
+                "description": "Lấy danh sách tất cả các quyền hệ thống hỗ trợ quản lý (Yêu cầu quyền: quan_ly_he_thong).",
+                "operationId": "df127ac803edf6b3ac9d981d70417da3",
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "quan_ly_he_thong"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    },
+                    "403": {
+                        "description": "Không có quyền truy cập"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/roles/{id}/permissions": {
+            "post": {
+                "tags": [
+                    "Roles & Permissions"
+                ],
+                "summary": "Gán/Đồng bộ danh sách quyền cho vai trò",
+                "description": "Gán hoặc đồng bộ mảng chứa các ID quyền cho một vai trò xác định bằng ID trên URL (Yêu cầu quyền: quan_ly_he_thong).",
+                "operationId": "90ff6d20b1b270da7ac1b9927190ce96",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID của Vai trò cần gán quyền",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "permissions_id"
+                                ],
+                                "properties": {
+                                    "permissions_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 2
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Gán quyền thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Gán quyền cho vai trò thành công"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dữ liệu gửi lên không hợp lệ"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    },
+                    "403": {
+                        "description": "Không có quyền truy cập"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy vai trò"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Lấy danh sách nhân viên",
+                "description": "Lấy danh sách nhân viên hỗ trợ tìm kiếm theo tên/mã/email, lọc theo công ty, chi nhánh, phòng ban, trạng thái và phân trang.",
+                "operationId": "fc0d9144251e511f26b96b293a5f6c11",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Số thứ tự trang cần lấy dữ liệu",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Số lượng bản ghi trên một trang",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Từ khóa tìm kiếm theo tên, mã hoặc email nhân sự",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "company_id",
+                        "in": "query",
+                        "description": "Lọc nhân sự trực thuộc một công ty cụ thể",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "branch_id",
+                        "in": "query",
+                        "description": "Lọc nhân sự trực thuộc một chi nhánh cụ thể",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "department_id",
+                        "in": "query",
+                        "description": "Lọc nhân sự trực thuộc một phòng ban cụ thể",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Trạng thái (1: Đang làm việc, 0: Đã nghỉ việc)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "company_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "branch_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "department_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "position_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "role_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "code": {
+                                                                "type": "string",
+                                                                "example": "ADMIN01"
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Super Admin"
+                                                            },
+                                                            "email": {
+                                                                "type": "string",
+                                                                "example": "admin@erb.vn"
+                                                            },
+                                                            "phone": {
+                                                                "type": "string",
+                                                                "example": "0987654321"
+                                                            },
+                                                            "status": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    },
+                    "403": {
+                        "description": "Không có quyền truy cập"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/document-status-history": {
+            "get": {
+                "tags": [
+                    "Document Status History"
+                ],
+                "summary": "Lấy lịch sử chuyển trạng thái chứng từ",
+                "description": "Truy vết các lần đổi trạng thái của phiếu (draft → pending → approved ...). Lọc theo phiếu (stock_document_id).",
+                "operationId": "47edd39dd55c6d15e945bb715377cc52",
+                "parameters": [
+                    {
+                        "name": "stock_document_id",
+                        "in": "query",
+                        "description": "ID phiếu kho cần xem lịch sử",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 50
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/in-transit-ledger": {
+            "get": {
+                "tags": [
+                    "In-Transit Ledger"
+                ],
+                "summary": "Lấy sổ hàng đang vận chuyển (in-transit)",
+                "description": "Danh sách dòng điều chuyển theo cặp kho nguồn→đích. Lọc theo kho nguồn/đích, SKU, trạng thái, phiếu.",
+                "operationId": "744ba536bdf5d0d4d8c22ac449fb9616",
+                "parameters": [
+                    {
+                        "name": "source_warehouse_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "dest_warehouse_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sku_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "stock_document_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "1: Đang vận chuyển, 2: Hoàn tất, 3: Đã trả lại",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                1,
+                                2,
+                                3
+                            ]
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/inbound-documents": {
+            "get": {
+                "tags": [
+                    "Inbound (Nhập kho)"
+                ],
+                "summary": "Danh sách phiếu nhập",
+                "operationId": "28cd8a1e9bd149fb2dd6916fed065288",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "warehouse_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Inbound (Nhập kho)"
+                ],
+                "summary": "Tạo phiếu nhập (nháp)",
+                "operationId": "59cb10be2671864bea4167b9491c6b60",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "dest_warehouse_id",
+                                    "lines"
+                                ],
+                                "properties": {
+                                    "dest_warehouse_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "note": {
+                                        "type": "string"
+                                    },
+                                    "lines": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "sku_id": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "quantity": {
+                                                    "type": "number",
+                                                    "example": 100
+                                                },
+                                                "unit_price": {
+                                                    "type": "number",
+                                                    "example": 50000
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tạo thành công"
+                    },
+                    "400": {
+                        "description": "Lỗi dữ liệu"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/inbound-documents/{id}": {
+            "get": {
+                "tags": [
+                    "Inbound (Nhập kho)"
+                ],
+                "summary": "Chi tiết phiếu nhập",
+                "operationId": "aae7fa4be614d77c4f36f4f11fd46997",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/inbound-documents/{id}/submit": {
+            "post": {
+                "tags": [
+                    "Inbound (Nhập kho)"
+                ],
+                "summary": "Gửi duyệt",
+                "operationId": "bdba3df5002a30047dfbe64f7aeca9b8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/inbound-documents/{id}/approve": {
+            "post": {
+                "tags": [
+                    "Inbound (Nhập kho)"
+                ],
+                "summary": "Duyệt phiếu",
+                "operationId": "513beaf2a359d050309136c45fed5d8f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/inbound-documents/{id}/confirm": {
+            "post": {
+                "tags": [
+                    "Inbound (Nhập kho)"
+                ],
+                "summary": "Thực hiện nhập kho (tăng tồn)",
+                "operationId": "0931076d361fd0d89b0af835c581dad4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Đã nhập kho, tồn tăng"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/inbound-documents/{id}/cancel": {
+            "post": {
+                "tags": [
+                    "Inbound (Nhập kho)"
+                ],
+                "summary": "Hủy phiếu",
+                "operationId": "80bc16575b42ab7c189355d48a079b9a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/inventory/balances": {
+            "get": {
+                "tags": [
+                    "Inventory (Tồn kho)"
+                ],
+                "summary": "Xem tồn kho theo kho hoặc toàn hệ thống",
+                "description": "scope=warehouse (mặc định) hoặc system (tổng hợp theo SKU toàn hệ thống).",
+                "operationId": "ca07acb6812db09214e1ac1c46be4e76",
+                "parameters": [
+                    {
+                        "name": "warehouse_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sku_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Tìm theo mã/tên SKU",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "scope",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "warehouse",
+                                "system"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/inventory-snapshots": {
+            "get": {
+                "tags": [
+                    "Inventory Snapshots"
+                ],
+                "summary": "Lấy danh sách snapshot tồn kho",
+                "description": "Danh sách bản chốt tồn theo ngày/kho/SKU. Lọc theo ngày chốt, kho, SKU.",
+                "operationId": "f49dafd7ca7a3a36952ce4c2ec0c21d2",
+                "parameters": [
+                    {
+                        "name": "snapshot_date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "warehouse_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sku_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 50
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/inventory-snapshots/generate": {
+            "post": {
+                "tags": [
+                    "Inventory Snapshots"
+                ],
+                "summary": "Chốt snapshot tồn kho theo ngày",
+                "description": "Sao chụp toàn bộ tồn hiện tại (available/in_transit/reserved) thành snapshot cho ngày chỉ định. Chạy lại cùng ngày sẽ ghi đè (upsert theo ràng buộc duy nhất ngày+kho+SKU).",
+                "operationId": "9cb5b60d2bc1b836e4ba52b9a5647f97",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "snapshot_date"
+                                ],
+                                "properties": {
+                                    "snapshot_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-06-08"
+                                    },
+                                    "warehouse_id": {
+                                        "description": "Chỉ chốt 1 kho; bỏ trống = tất cả kho",
+                                        "type": "integer",
+                                        "example": null,
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Chốt snapshot thành công"
+                    },
+                    "400": {
+                        "description": "Dữ liệu không hợp lệ"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/outbound-documents": {
+            "get": {
+                "tags": [
+                    "Outbound (Xuất kho)"
+                ],
+                "summary": "Danh sách phiếu xuất",
+                "operationId": "044d9fd9e9940b55d51bdf4def776bb4",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "warehouse_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Outbound (Xuất kho)"
+                ],
+                "summary": "Tạo phiếu xuất (nháp)",
+                "operationId": "0242adc76ea53ce2fdecc2ec9a5ac10d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "source_warehouse_id",
+                                    "lines"
+                                ],
+                                "properties": {
+                                    "source_warehouse_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "note": {
+                                        "type": "string"
+                                    },
+                                    "lines": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "sku_id": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "quantity": {
+                                                    "type": "number",
+                                                    "example": 10
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tạo thành công"
+                    },
+                    "400": {
+                        "description": "Lỗi dữ liệu"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/outbound-documents/{id}": {
+            "get": {
+                "tags": [
+                    "Outbound (Xuất kho)"
+                ],
+                "summary": "Chi tiết phiếu xuất",
+                "operationId": "5a47a10a57aaa80abb728b7863275b7d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/outbound-documents/{id}/submit": {
+            "post": {
+                "tags": [
+                    "Outbound (Xuất kho)"
+                ],
+                "summary": "Gửi duyệt",
+                "operationId": "a48f1a679e55fd3c0ad8f4af34cc240d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/outbound-documents/{id}/approve": {
+            "post": {
+                "tags": [
+                    "Outbound (Xuất kho)"
+                ],
+                "summary": "Duyệt (kiểm tra tồn khả dụng)",
+                "operationId": "5ab1a75318c45a5e9cab897a2c5941ad",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "422": {
+                        "description": "Tồn không đủ"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/outbound-documents/{id}/confirm": {
+            "post": {
+                "tags": [
+                    "Outbound (Xuất kho)"
+                ],
+                "summary": "Thực hiện xuất kho (giảm tồn)",
+                "operationId": "8681a3c0b59d2e0a231dd2f1147e29d4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Đã xuất kho, tồn giảm"
+                    },
+                    "422": {
+                        "description": "Tồn không đủ"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/outbound-documents/{id}/cancel": {
+            "post": {
+                "tags": [
+                    "Outbound (Xuất kho)"
+                ],
+                "summary": "Hủy phiếu",
+                "operationId": "dee65770c1f09568d411962bb16ff692",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/product-categories": {
+            "get": {
+                "tags": [
+                    "Product Categories"
+                ],
+                "summary": "Lấy danh sách nhóm sản phẩm",
+                "description": "Danh sách nhóm sản phẩm (cây danh mục). Dùng tree=1 để trả về dạng cây lồng nhau.",
+                "operationId": "3e5f24e13fed6cb43d37e6f0a7cf09a7",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Tìm theo mã/tên",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "parent_id",
+                        "in": "query",
+                        "description": "Lọc theo danh mục cha",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "tree",
+                        "in": "query",
+                        "description": "1: trả về dạng cây lồng nhau",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Product Categories"
+                ],
+                "summary": "Tạo nhóm sản phẩm",
+                "description": "depth được tính tự động theo danh mục cha. parent_id null = danh mục gốc.",
+                "operationId": "d3d10dd7c089f2c347f855ec071b16b7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "code",
+                                    "name"
+                                ],
+                                "properties": {
+                                    "code": {
+                                        "type": "string",
+                                        "example": "DM001"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Điện tử"
+                                    },
+                                    "parent_id": {
+                                        "type": "integer",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "sort_order": {
+                                        "type": "integer",
+                                        "example": 0
+                                    },
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tạo thành công"
+                    },
+                    "400": {
+                        "description": "Dữ liệu không hợp lệ"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/product-categories/{id}": {
+            "get": {
+                "tags": [
+                    "Product Categories"
+                ],
+                "summary": "Xem chi tiết nhóm sản phẩm",
+                "operationId": "1a972083ec6e52dc48c24b9e49a52648",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy nhóm sản phẩm"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Product Categories"
+                ],
+                "summary": "Cập nhật nhóm sản phẩm",
+                "operationId": "dc29e8a45062e93a993a29e4d84e97f9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "code": {
+                                        "type": "string",
+                                        "example": "DM001"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Điện tử (mới)"
+                                    },
+                                    "parent_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "sort_order": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cập nhật thành công"
+                    },
+                    "400": {
+                        "description": "Dữ liệu không hợp lệ"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy nhóm sản phẩm"
+                    },
+                    "409": {
+                        "description": "parent_id không hợp lệ (vòng lặp)"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Product Categories"
+                ],
+                "summary": "Xóa nhóm sản phẩm",
+                "description": "Chỉ xóa được khi không còn danh mục con.",
+                "operationId": "43513772ab67f7bcf1e0c6c36cd3b916",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Xóa thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy nhóm sản phẩm"
+                    },
+                    "409": {
+                        "description": "Danh mục đang có danh mục con"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/reports/inventory-xnt": {
+            "get": {
+                "tags": [
+                    "Report (Báo cáo XNT)"
+                ],
+                "summary": "Báo cáo Xuất - Nhập - Tồn theo kỳ",
+                "description": "Tồn đầu kỳ + Nhập - Xuất (± điều chuyển) = Tồn cuối kỳ. scope=warehouse | system.",
+                "operationId": "81e82e7e3542bd57c749194d74586881",
+                "parameters": [
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "warehouse_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "scope",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "warehouse",
+                                "system"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Thiếu/khoảng ngày sai"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/inventory-reservations": {
+            "get": {
+                "tags": [
+                    "Inventory Reservations"
+                ],
+                "summary": "Lấy danh sách đặt giữ tồn kho",
+                "description": "Danh sách reservation. Lọc theo kho/SKU/trạng thái. (Non-MVP: bảng để sẵn, chưa wire vào engine xuất kho.)",
+                "operationId": "5dc774a92107931c3da9a15eaad5e744",
+                "parameters": [
+                    {
+                        "name": "warehouse_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sku_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "1: Đang giữ, 2: Đã nhả, 3: Đã dùng",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                1,
+                                2,
+                                3
+                            ]
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/inventory-reservations/{id}": {
+            "get": {
+                "tags": [
+                    "Inventory Reservations"
+                ],
+                "summary": "Xem chi tiết một đặt giữ tồn kho",
+                "operationId": "93e8faf8fc46997981e8566769a175ad",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy bản ghi đặt giữ"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/safe-stock-configs": {
+            "get": {
+                "tags": [
+                    "Safe Stock Configs"
+                ],
+                "summary": "Lấy danh sách cấu hình tồn kho an toàn (Min/Max)",
+                "description": "Cấu hình tồn an toàn theo SKU và (tùy chọn) theo kho. warehouse_id null = áp dụng toàn hệ thống. Tính năng non-MVP, đã sẵn sàng.",
+                "operationId": "e84a2fa3f87b13da2dfe45bc4499423e",
+                "parameters": [
+                    {
+                        "name": "sku_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "warehouse_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Safe Stock Configs"
+                ],
+                "summary": "Tạo cấu hình tồn kho an toàn",
+                "description": "Ràng buộc duy nhất theo (sku_id, warehouse_id, effective_from). Cần ít nhất một trong min_qty/max_qty; nếu cả hai thì max_qty >= min_qty.",
+                "operationId": "bc0eab49595eac15b47efd45ccfcc127",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "sku_id",
+                                    "effective_from"
+                                ],
+                                "properties": {
+                                    "sku_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "warehouse_id": {
+                                        "description": "null = áp dụng toàn hệ thống",
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "min_qty": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 10,
+                                        "nullable": true
+                                    },
+                                    "max_qty": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 100,
+                                        "nullable": true
+                                    },
+                                    "effective_from": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-06-08"
+                                    },
+                                    "effective_to": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "note": {
+                                        "type": "string",
+                                        "example": "Cấu hình mùa cao điểm",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tạo thành công"
+                    },
+                    "400": {
+                        "description": "Dữ liệu không hợp lệ"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    },
+                    "409": {
+                        "description": "Đã tồn tại cấu hình cho cùng SKU/kho/ngày hiệu lực"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/safe-stock-configs/{id}": {
+            "get": {
+                "tags": [
+                    "Safe Stock Configs"
+                ],
+                "summary": "Xem chi tiết cấu hình tồn kho an toàn",
+                "operationId": "51538c63669b19ccb9f44076be3c2a3f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy cấu hình"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Safe Stock Configs"
+                ],
+                "summary": "Cập nhật cấu hình tồn kho an toàn",
+                "operationId": "1d8ef5fb5081111d985ca1abb9866ddb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "min_qty": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 20,
+                                        "nullable": true
+                                    },
+                                    "max_qty": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 200,
+                                        "nullable": true
+                                    },
+                                    "effective_to": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-12-31",
+                                        "nullable": true
+                                    },
+                                    "note": {
+                                        "type": "string",
+                                        "example": "Điều chỉnh ngưỡng",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cập nhật thành công"
+                    },
+                    "400": {
+                        "description": "Dữ liệu không hợp lệ"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy cấu hình"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Safe Stock Configs"
+                ],
+                "summary": "Xóa cấu hình tồn kho an toàn",
+                "operationId": "f1811ab4653b0de7b4544f592ec21af8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Xóa thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy cấu hình"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/skus": {
+            "get": {
+                "tags": [
+                    "SKUs"
+                ],
+                "summary": "Lấy danh sách sản phẩm (SKU)",
+                "description": "Danh sách SKU hỗ trợ tìm kiếm theo mã/tên, lọc theo nhóm hàng, trạng thái, có serial và phân trang.",
+                "operationId": "73c6885b75631392e1877fae77796832",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Trang",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Số bản ghi/trang",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Tìm theo mã hoặc tên SKU",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "Lọc theo nhóm sản phẩm",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "has_serial",
+                        "in": "query",
+                        "description": "Quản lý serial (1: Có, 0: Không)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Trạng thái (1: Hoạt động, 0: Ngừng)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "code": {
+                                                                "type": "string",
+                                                                "example": "SP001"
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Áo thun nam"
+                                                            },
+                                                            "unit": {
+                                                                "type": "string",
+                                                                "example": "cái"
+                                                            },
+                                                            "category": {
+                                                                "type": "string",
+                                                                "example": "Thời trang",
+                                                                "nullable": true
+                                                            },
+                                                            "has_serial": {
+                                                                "type": "boolean",
+                                                                "example": false
+                                                            },
+                                                            "status": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "SKUs"
+                ],
+                "summary": "Tạo SKU mới",
+                "description": "Tạo sản phẩm. Mã SKU (code) là duy nhất toàn hệ thống.",
+                "operationId": "bffb584c125377fcaf24548abdaf69c1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "code",
+                                    "name",
+                                    "unit"
+                                ],
+                                "properties": {
+                                    "code": {
+                                        "type": "string",
+                                        "example": "SP001"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Áo thun nam"
+                                    },
+                                    "unit": {
+                                        "type": "string",
+                                        "example": "cái"
+                                    },
+                                    "category": {
+                                        "type": "string",
+                                        "example": "Thời trang",
+                                        "nullable": true
+                                    },
+                                    "has_serial": {
+                                        "type": "boolean",
+                                        "example": false
+                                    },
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tạo SKU thành công"
+                    },
+                    "400": {
+                        "description": "Dữ liệu không hợp lệ"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/skus/{id}": {
+            "get": {
+                "tags": [
+                    "SKUs"
+                ],
+                "summary": "Xem chi tiết SKU",
+                "operationId": "15014f0b9bc327c85638f1f492921405",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy SKU"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "SKUs"
+                ],
+                "summary": "Cập nhật SKU",
+                "operationId": "2672f3e8654cfbe8fda3906ea1378a36",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "code": {
+                                        "type": "string",
+                                        "example": "SP001"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Áo thun nam (mới)"
+                                    },
+                                    "unit": {
+                                        "type": "string",
+                                        "example": "cái"
+                                    },
+                                    "category": {
+                                        "type": "string",
+                                        "example": "Thời trang",
+                                        "nullable": true
+                                    },
+                                    "has_serial": {
+                                        "type": "boolean",
+                                        "example": false
+                                    },
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cập nhật thành công"
+                    },
+                    "400": {
+                        "description": "Dữ liệu không hợp lệ"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy SKU"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "SKUs"
+                ],
+                "summary": "Xóa SKU",
+                "description": "Chỉ xóa được khi SKU chưa phát sinh tồn/giao dịch. Khuyến nghị dùng Ngừng hoạt động thay vì xóa.",
+                "operationId": "4384a26f2e2dfebf8f432bb59f2062f2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Xóa thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy SKU"
+                    },
+                    "409": {
+                        "description": "SKU đang được sử dụng, không thể xóa"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/skus/{id}/disable": {
+            "patch": {
+                "tags": [
+                    "SKUs"
+                ],
+                "summary": "Ngừng hoạt động SKU",
+                "operationId": "4685ead7aecc793d6e08b20d7916a242",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Đã ngừng hoạt động"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy SKU"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/skus/{id}/enable": {
+            "patch": {
+                "tags": [
+                    "SKUs"
+                ],
+                "summary": "Kích hoạt lại SKU",
+                "operationId": "4ec3c65abd991763f9d189994f472762",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Đã kích hoạt"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy SKU"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/stock-movements": {
+            "get": {
+                "tags": [
+                    "Stock Movement (Lịch sử biến động)"
+                ],
+                "summary": "Lịch sử biến động tồn kho (lọc theo kho/SKU/loại/thời gian/chứng từ)",
+                "operationId": "e0c801e2d5c12e4a71b888e2c5f7b69b",
+                "parameters": [
+                    {
+                        "name": "warehouse_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sku_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "movement_type",
+                        "in": "query",
+                        "description": "1 Nhập,2 Xuất,3 ĐC xuất,4 ĐC nhập,5 Điều chỉnh",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "document_id",
+                        "in": "query",
+                        "description": "Lọc theo phiếu nguồn",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/suppliers": {
+            "get": {
+                "tags": [
+                    "Suppliers"
+                ],
+                "summary": "Lấy danh sách nhà cung cấp",
+                "description": "Danh sách nhà cung cấp, hỗ trợ tìm kiếm theo mã/tên/điện thoại, lọc trạng thái và phân trang.",
+                "operationId": "ba8f7ed70036140b7770251e26f1ff47",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Tìm theo mã/tên/điện thoại",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "1: Hoạt động, 0: Ngừng",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Suppliers"
+                ],
+                "summary": "Tạo nhà cung cấp mới",
+                "operationId": "64259acc08a89baca3e451763d551dd0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "code",
+                                    "name"
+                                ],
+                                "properties": {
+                                    "code": {
+                                        "type": "string",
+                                        "example": "NCC001"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Công ty TNHH ABC"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "0901234567",
+                                        "nullable": true
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "123 Lê Lợi, Q1, TP.HCM",
+                                        "nullable": true
+                                    },
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tạo thành công"
+                    },
+                    "400": {
+                        "description": "Dữ liệu không hợp lệ"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/suppliers/{id}": {
+            "get": {
+                "tags": [
+                    "Suppliers"
+                ],
+                "summary": "Xem chi tiết nhà cung cấp",
+                "operationId": "9e5f63395e0ca57e5baed9dd1c9bc5f6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy nhà cung cấp"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Suppliers"
+                ],
+                "summary": "Cập nhật nhà cung cấp",
+                "operationId": "3133e4450944b849c36ac8589f3cc2c1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "code": {
+                                        "type": "string",
+                                        "example": "NCC001"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Công ty TNHH ABC (mới)"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "0901234567",
+                                        "nullable": true
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "456 Nguyễn Huệ",
+                                        "nullable": true
+                                    },
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cập nhật thành công"
+                    },
+                    "400": {
+                        "description": "Dữ liệu không hợp lệ"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy nhà cung cấp"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Suppliers"
+                ],
+                "summary": "Xóa nhà cung cấp",
+                "description": "Khuyến nghị dùng Ngừng hoạt động thay vì xóa nếu nhà cung cấp đã gắn với phiếu nhập.",
+                "operationId": "f69d90fcae84f6deb47756e9fa98b758",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Xóa thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy nhà cung cấp"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/suppliers/{id}/disable": {
+            "patch": {
+                "tags": [
+                    "Suppliers"
+                ],
+                "summary": "Ngừng hoạt động nhà cung cấp",
+                "operationId": "d9c3f2a2b9d157e4d4e1ca71964f376f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Đã ngừng hoạt động"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy nhà cung cấp"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/suppliers/{id}/enable": {
+            "patch": {
+                "tags": [
+                    "Suppliers"
+                ],
+                "summary": "Kích hoạt lại nhà cung cấp",
+                "operationId": "f2c9ca797e68890a02a2646a9801fb10",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Đã kích hoạt"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy nhà cung cấp"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/transfer-orders": {
+            "get": {
+                "tags": [
+                    "Transfer (Điều chuyển)"
+                ],
+                "summary": "Danh sách phiếu điều chuyển",
+                "operationId": "9b72fcc22d2ded52560191c2b30d8464",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "warehouse_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Transfer (Điều chuyển)"
+                ],
+                "summary": "Tạo phiếu điều chuyển (nháp)",
+                "operationId": "7cfa689f5e7c58ac24119f151ca0a9d5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "source_warehouse_id",
+                                    "dest_warehouse_id",
+                                    "lines"
+                                ],
+                                "properties": {
+                                    "source_warehouse_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "dest_warehouse_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "note": {
+                                        "type": "string"
+                                    },
+                                    "lines": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "sku_id": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "quantity": {
+                                                    "type": "number",
+                                                    "example": 20
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tạo thành công"
+                    },
+                    "422": {
+                        "description": "Kho nguồn trùng đích"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/transfer-orders/{id}": {
+            "get": {
+                "tags": [
+                    "Transfer (Điều chuyển)"
+                ],
+                "summary": "Chi tiết phiếu điều chuyển",
+                "operationId": "cbae0e922a8cd98f07c10068107e53c6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/transfer-orders/{id}/submit": {
+            "post": {
+                "tags": [
+                    "Transfer (Điều chuyển)"
+                ],
+                "summary": "Gửi duyệt",
+                "operationId": "07f3b63d59bf3a63f8651f23def4ba67",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/transfer-orders/{id}/approve": {
+            "post": {
+                "tags": [
+                    "Transfer (Điều chuyển)"
+                ],
+                "summary": "Phê duyệt (kiểm tra tồn nguồn)",
+                "operationId": "19248f4851fabf02bfc8b01d4c6c9263",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "422": {
+                        "description": "Tồn nguồn không đủ"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/transfer-orders/{id}/dispatch": {
+            "post": {
+                "tags": [
+                    "Transfer (Điều chuyển)"
+                ],
+                "summary": "Xuất điều chuyển (nguồn -, In-Transit +)",
+                "operationId": "d8e268d2d0e06d88712cbf0db9a2ded7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Đang vận chuyển"
+                    },
+                    "422": {
+                        "description": "Tồn không đủ"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/transfer-orders/{id}/receive": {
+            "post": {
+                "tags": [
+                    "Transfer (Điều chuyển)"
+                ],
+                "summary": "Nhận hàng (In-Transit -, đích +)",
+                "operationId": "5feed0b890ff2d1156e36cdc02b8506c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "lines": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "line_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "received_qty": {
+                                                    "type": "number",
+                                                    "example": 20
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Hoàn tất"
+                    },
+                    "422": {
+                        "description": "Nhận vượt số điều chuyển"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/transfer-orders/{id}/return": {
+            "post": {
+                "tags": [
+                    "Transfer (Điều chuyển)"
+                ],
+                "summary": "Trả lại điều chuyển (hoàn nguồn)",
+                "operationId": "7ab6ec6dbe676fd4658770272437e14f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "reason": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Bị trả lại"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/transfer-orders/{id}/cancel": {
+            "post": {
+                "tags": [
+                    "Transfer (Điều chuyển)"
+                ],
+                "summary": "Hủy phiếu (trước khi xuất)",
+                "operationId": "9afdd2f7ae9e8aeeb1ca890d226d0f26",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/warehouses": {
+            "get": {
+                "tags": [
+                    "Warehouses"
+                ],
+                "summary": "Lấy danh sách kho",
+                "description": "Danh sách kho hỗ trợ tìm kiếm theo mã/tên, lọc theo công ty, chi nhánh, loại kho, kho cha, trạng thái và phân trang.",
+                "operationId": "13113e11016af8a5ac9717747fff191c",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Trang",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Số bản ghi/trang",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Tìm theo mã hoặc tên kho",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "company_id",
+                        "in": "query",
+                        "description": "Lọc theo công ty",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "branch_id",
+                        "in": "query",
+                        "description": "Lọc theo chi nhánh",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "warehouse_type",
+                        "in": "query",
+                        "description": "Loại kho (1: Kho tổng, 2: Kho con)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                1,
+                                2
+                            ]
+                        }
+                    },
+                    {
+                        "name": "parent_id",
+                        "in": "query",
+                        "description": "Lọc theo kho cha",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Trạng thái (1: Hoạt động, 0: Ngừng hoạt động)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "company_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "branch_id": {
+                                                                "type": "integer",
+                                                                "example": 1,
+                                                                "nullable": true
+                                                            },
+                                                            "parent_id": {
+                                                                "type": "integer",
+                                                                "example": null,
+                                                                "nullable": true
+                                                            },
+                                                            "code": {
+                                                                "type": "string",
+                                                                "example": "WH001"
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Kho Tổng HCM"
+                                                            },
+                                                            "warehouse_type": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "address": {
+                                                                "type": "string",
+                                                                "example": "123 Nguyễn Huệ, Quận 1"
+                                                            },
+                                                            "manager_id": {
+                                                                "type": "integer",
+                                                                "example": 1,
+                                                                "nullable": true
+                                                            },
+                                                            "status": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Warehouses"
+                ],
+                "summary": "Tạo kho mới",
+                "description": "Tạo kho tổng hoặc kho con. Mã kho (code) là duy nhất toàn hệ thống.",
+                "operationId": "8c029d4e1b5dd0fe9c7d3cbef04628a9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "company_id",
+                                    "code",
+                                    "name",
+                                    "warehouse_type"
+                                ],
+                                "properties": {
+                                    "company_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "branch_id": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "parent_id": {
+                                        "description": "Kho cha (chỉ với kho con)",
+                                        "type": "integer",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "example": "WH010"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Kho Quận 7"
+                                    },
+                                    "warehouse_type": {
+                                        "type": "integer",
+                                        "enum": [
+                                            1,
+                                            2
+                                        ],
+                                        "example": 2
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "Quận 7, TP.HCM",
+                                        "nullable": true
+                                    },
+                                    "manager_id": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tạo kho thành công"
+                    },
+                    "400": {
+                        "description": "Dữ liệu không hợp lệ"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/warehouses/{id}": {
+            "get": {
+                "tags": [
+                    "Warehouses"
+                ],
+                "summary": "Xem chi tiết kho",
+                "operationId": "ef692f1c7acd4e40dc0f59c7c9a140e0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy kho"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Warehouses"
+                ],
+                "summary": "Cập nhật kho",
+                "description": "Cập nhật thông tin kho. KHÔNG cho phép đổi mã kho (code).",
+                "operationId": "61cf915a0f59022abdc3715f1c0c034b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "branch_id": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "parent_id": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Kho Quận 7 (mới)"
+                                    },
+                                    "warehouse_type": {
+                                        "type": "integer",
+                                        "enum": [
+                                            1,
+                                            2
+                                        ],
+                                        "example": 2
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "Quận 7, TP.HCM",
+                                        "nullable": true
+                                    },
+                                    "manager_id": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cập nhật thành công"
+                    },
+                    "400": {
+                        "description": "Dữ liệu không hợp lệ"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy kho"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Warehouses"
+                ],
+                "summary": "Xóa kho",
+                "description": "Chỉ xóa được kho khi không còn kho con và chưa phát sinh tồn/giao dịch. Khuyến nghị dùng Ngừng hoạt động thay vì xóa.",
+                "operationId": "0cc9bb17d3ccc620be1b6dfe490d6e9a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Xóa thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy kho"
+                    },
+                    "409": {
+                        "description": "Kho đang được sử dụng, không thể xóa"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/warehouses/{id}/disable": {
+            "patch": {
+                "tags": [
+                    "Warehouses"
+                ],
+                "summary": "Ngừng hoạt động kho",
+                "description": "Đặt trạng thái kho = 0 (Ngừng hoạt động). Kho ngừng hoạt động bị chặn mọi nghiệp vụ nhập/xuất/điều chuyển.",
+                "operationId": "fdd7aa5ff5eade3bab4a0155cb2fca9d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Đã ngừng hoạt động"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy kho"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/warehouses/{id}/enable": {
+            "patch": {
+                "tags": [
+                    "Warehouses"
+                ],
+                "summary": "Kích hoạt lại kho",
+                "description": "Đặt trạng thái kho = 1 (Hoạt động).",
+                "operationId": "30701bc5cbd7e3238aa87da0e5749306",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Đã kích hoạt"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy kho"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/warehouse-scopes": {
+            "get": {
+                "tags": [
+                    "Warehouse Scopes"
+                ],
+                "summary": "Lấy danh sách phân quyền user theo kho (data scope)",
+                "description": "Liệt kê các gán user ↔ kho. Lọc theo user_id hoặc warehouse_id. Hỗ trợ tích hợp phân quyền Module 10.",
+                "operationId": "416e6c71b94d2a6430c09d876c2c346f",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "warehouse_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 50
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy danh sách thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Warehouse Scopes"
+                ],
+                "summary": "Gán quyền truy cập kho cho user",
+                "description": "Gán 1 user vào 1 hoặc nhiều kho. Bỏ qua các cặp đã tồn tại (không lỗi).",
+                "operationId": "3c975ba4a8ad8a765b0c16a578938e64",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "warehouse_ids"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "warehouse_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Gán quyền thành công"
+                    },
+                    "400": {
+                        "description": "Dữ liệu không hợp lệ"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực tài khoản"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/warehouse-scopes/{id}": {
+            "delete": {
+                "tags": [
+                    "Warehouse Scopes"
+                ],
+                "summary": "Thu hồi quyền truy cập kho",
+                "description": "Xóa 1 bản ghi gán user ↔ kho theo id.",
+                "operationId": "41ab863549427175a10fccf277acac84",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thu hồi thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy bản ghi phân quyền"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Nhập JWT Access Token (dạng: Bearer <token>) để thực hiện các yêu cầu cần xác thực.",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Branches",
+            "description": "Branches"
+        },
+        {
+            "name": "Companies",
+            "description": "Companies"
+        },
+        {
+            "name": "Departments",
+            "description": "Departments"
+        },
+        {
+            "name": "Positions",
+            "description": "Positions"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Roles & Permissions",
+            "description": "Roles & Permissions"
+        },
+        {
+            "name": "Users",
+            "description": "Users"
+        },
+        {
+            "name": "Document Status History",
+            "description": "Document Status History"
+        },
+        {
+            "name": "In-Transit Ledger",
+            "description": "In-Transit Ledger"
+        },
+        {
+            "name": "Inbound (Nhập kho)",
+            "description": "Inbound (Nhập kho)"
+        },
+        {
+            "name": "Inventory (Tồn kho)",
+            "description": "Inventory (Tồn kho)"
+        },
+        {
+            "name": "Inventory Snapshots",
+            "description": "Inventory Snapshots"
+        },
+        {
+            "name": "Outbound (Xuất kho)",
+            "description": "Outbound (Xuất kho)"
+        },
+        {
+            "name": "Product Categories",
+            "description": "Product Categories"
+        },
+        {
+            "name": "Report (Báo cáo XNT)",
+            "description": "Report (Báo cáo XNT)"
+        },
+        {
+            "name": "Inventory Reservations",
+            "description": "Inventory Reservations"
+        },
+        {
+            "name": "Safe Stock Configs",
+            "description": "Safe Stock Configs"
+        },
+        {
+            "name": "SKUs",
+            "description": "SKUs"
+        },
+        {
+            "name": "Stock Movement (Lịch sử biến động)",
+            "description": "Stock Movement (Lịch sử biến động)"
+        },
+        {
+            "name": "Suppliers",
+            "description": "Suppliers"
+        },
+        {
+            "name": "Transfer (Điều chuyển)",
+            "description": "Transfer (Điều chuyển)"
+        },
+        {
+            "name": "Warehouses",
+            "description": "Warehouses"
+        },
+        {
+            "name": "Warehouse Scopes",
+            "description": "Warehouse Scopes"
+        }
+    ]
+}

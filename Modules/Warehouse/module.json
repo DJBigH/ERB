@@ -1,0 +1,12 @@
+{
+    "name": "Warehouse",
+    "alias": "warehouse",
+    "description": "Module 2 - Multi-tier warehouse management: warehouses, SKUs, inventory balances, stock movements, and audit logs.",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Warehouse\\Providers\\WarehouseServiceProvider"
+    ],
+    "files": [],
+    "requires": []
+}

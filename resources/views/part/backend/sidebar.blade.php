@@ -57,6 +57,82 @@
               <p>Quản Lý Nhân Viên</p>
             </a>
           </li>
+          <li class="nav-header">CẤU HÌNH & THIẾT LẬP KHO</li>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-tab" data-tab="warehouses">
+              <i class="nav-icon fas fa-warehouse"></i>
+              <p>Quản Lý Kho</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-tab" data-tab="skus">
+              <i class="nav-icon fas fa-boxes"></i>
+              <p>Quản Lý Sản Phẩm (SKU)</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-tab" data-tab="categories">
+              <i class="nav-icon fas fa-tags"></i>
+              <p>Nhóm Sản Phẩm</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-tab" data-tab="suppliers">
+              <i class="nav-icon fas fa-truck"></i>
+              <p>Nhà Cung Cấp</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-tab" data-tab="warehouse-scopes">
+              <i class="nav-icon fas fa-user-shield"></i>
+              <p>Phân Quyền Kho</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-tab" data-tab="safe-stock-configs">
+              <i class="nav-icon fas fa-shield-alt"></i>
+              <p>Tồn Kho An Toàn</p>
+            </a>
+          </li>
+          <li class="nav-header">NGHIỆP VỤ KHO</li>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-tab" data-tab="inbound-documents">
+              <i class="nav-icon fas fa-file-import"></i>
+              <p>Nhập Kho (Inbound)</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-tab" data-tab="outbound-documents">
+              <i class="nav-icon fas fa-file-export"></i>
+              <p>Xuất Kho (Outbound)</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-tab" data-tab="transfer-orders">
+              <i class="nav-icon fas fa-exchange-alt"></i>
+              <p>Điều Chuyển Kho</p>
+            </a>
+          </li>
+          <li class="nav-header">BÁO CÁO & TỒN KHO</li>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-tab" data-tab="inventory-balances">
+              <i class="nav-icon fas fa-calculator"></i>
+              <p>Số Dư Tồn Kho</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-tab" data-tab="stock-movements">
+              <i class="nav-icon fas fa-history"></i>
+              <p>Lịch Sử Biến Động (Thẻ Kho)</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-tab" data-tab="reports-xnt">
+              <i class="nav-icon fas fa-chart-line"></i>
+              <p>Báo Cáo Xuất Nhập Tồn</p>
+            </a>
+          </li>
+          <li class="nav-header">HỆ THỐNG</li>
           <li class="nav-item">
             <a href="#" class="nav-link nav-tab" data-tab="roles">
               <i class="nav-icon fas fa-shield-alt"></i>
